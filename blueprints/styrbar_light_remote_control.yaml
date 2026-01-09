@@ -109,12 +109,6 @@ trigger:
     type: action
     subtype: brightness_move_up
     id: dim_up
-  - platform: device
-    device_id: !input mqtt_device
-    domain: mqtt
-    type: action
-    subtype: brightness_stop
-    id: dim_stop
 
 variables:
   light_entity: !input light_entity
