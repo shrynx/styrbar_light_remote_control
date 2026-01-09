@@ -122,6 +122,7 @@ variables:
 
 action:
   - choose:
+      # HOLD up -> turn on
       - conditions:
           - condition: trigger
             id: light_on
@@ -129,6 +130,7 @@ action:
           - service: light.turn_on
             target:
               entity_id: !input light_entity
+      # HOLD down -> turn off
       - conditions:
           - condition: trigger
             id: light_off
@@ -186,38 +188,26 @@ action:
               until:
                 - condition: trigger
                   id: change_color_right_release
+      # PRESS down -> single brightness decrease
       - conditions:
           - condition: trigger
             id: dim_down
         sequence:
-          - repeat:
-              sequence:
-                - service: light.turn_on
-                  target:
-                    entity_id: !input light_entity
-                  data:
-                    brightness_step_pct: "-{{ brightness_step | int(5) }}"
-                    transition: !input transition_seconds
-                - delay:
-                    milliseconds: !input delay_ms
-              until:
-                - condition: trigger
-                  id: dim_stop
+          - service: light.turn_on
+            target:
+              entity_id: !input light_entity
+            data:
+              brightness_step_pct: "-{{ brightness_step | int(5) }}"
+              transition: !input transition_seconds
+      # PRESS up -> single brightness increase
       - conditions:
           - condition: trigger
             id: dim_up
         sequence:
-          - repeat:
-              sequence:
-                - service: light.turn_on
-                  target:
-                    entity_id: !input light_entity
-                  data:
-                    brightness_step_pct: "{{ brightness_step | int(5) }}"
-                    transition: !input transition_seconds
-                - delay:
-                    milliseconds: !input delay_ms
-              until:
-                - condition: trigger
-                  id: dim_stop
+          - service: light.turn_on
+            target:
+              entity_id: !input light_entity
+            data:
+              brightness_step_pct: "{{ brightness_step | int(5) }}"
+              transition: !input transition_seconds
 mode: restart
